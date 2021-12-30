@@ -15,6 +15,9 @@ public:
 
     cv::Mat getInMatrix() const;
     cv::Mat getInDistCoeffs() const;
+    cv::Mat getRvec() const;
+    cv::Mat getTvec() const;
+    cv::Mat getRotM() const;
 protected:
     cv::Mat cameraMatrix, distCoeffs;
     cv::Point3f worldPosition;

@@ -57,4 +57,22 @@ Mat camera::getInDistCoeffs() const
 
 }
 
+Mat camera::getRvec() const
+{
+    return rvec;
+
+}
+
+Mat camera::getTvec() const
+{
+    return tvec;
+
+}
+
+Mat camera::getRotM() const
+{
+    return rotM;
+
+}
+
 

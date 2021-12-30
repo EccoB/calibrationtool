@@ -1,11 +1,25 @@
-#include "uimain.h"
+#include <ui/uimain.h>
 
 #include <QApplication>
 #include <QCommandLineParser>
 #include "userstrings.h"
+#define TESTING
+
+
+#ifdef TESTING
+    #include <testing.h>
+    #include <stdio.h>
+    #include <iostream>
+#endif
+
 
 int main(int argc, char *argv[])
 {
+#ifdef TESTING
+    std::cout<<"Der Test"<<std::endl;
+    std::cout<<"Test:"<<tst::checkIntrinsics()<<std::endl;
+#endif
+
 
 
 
