@@ -27,6 +27,9 @@ protected:
     void createPoint(int x, int y);
 protected slots:
     void imageclicked(QMouseEvent *event);
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::UImain *ui;
     imageView *imageUserL;

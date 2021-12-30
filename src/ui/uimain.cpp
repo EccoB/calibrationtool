@@ -9,6 +9,7 @@
 #include <QString>
 #include <QDir>
 #include <QDebug>
+#include <QFileDialog>
 //------
 #include <string>
 #include <src/ui/imageview.h>
@@ -77,6 +78,13 @@ void UImain::updateImage(const QImage &img)
     image = img;    //we copy the image
     imageUserL->setPixmap(QPixmap::fromImage(image));
     imageUserL->adjustSize();
+
+    //At the sime time, we upate the labels, should be done more elgant in a later program to avoid unnecessary rewrites
+    if(solution.getSolutionValid()){
+        QString text=QString("x:%1 y:%2 z:%3").arg(solution.getPositionOfObject().x).arg(solution.getPositionOfObject().y).arg(solution.getPositionOfObject().z);
+        ui->lPositionCam->setText(text);
+        ui->lPositionCam->setStyleSheet("QLabel { background-color : green; }");
+    }
 }
 
 /**
@@ -164,3 +172,14 @@ bool UImain::loadFile(const QString &fileName){
 
     return true;
 }
+
+void UImain::on_pushButton_clicked()
+{
+    QFileDialog dialog(this,tr("Open Image"), "", tr("Image Files (*.png *.jpg *.jpeg *.JPG *.bmp)"));
+    if(dialog.exec()){
+        QStringList filenames= dialog.selectedFiles();
+        if(filenames.length()==1)
+            loadFile(filenames[0]);
+    }
+}
+

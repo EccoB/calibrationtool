@@ -54,24 +54,15 @@ void CameraPose::addPoint(int x, int y)
  */
 void CameraPose::refreshImage(){
     Mat newImage=obj.getImage();
-    //Draw the lines between all points
     const std::vector<cv::Point2f> imagePts=obj.getImagePoints();
     size_t elements=imagePts.size();
-    switch (elements) {
-    case 0:
-        return;
-        break;
-    case 1:
-
-    default:
-        break;
-    }
-
 
 
     //----- Drawing Lines and points of image ----------
-    //Precondition: To draw a line, there have to be at least two points
+
     if(elements>=2){
+        //Draw all lines, that the user puts in, regardless of what the rest is doing, found it nice, kept it in
+        //Precondition: To draw a line, there have to be at least two points
         for(std::size_t i = 1; i < imagePts.size(); ++i) {
            cv::line(newImage, imagePts[i-1], imagePts[i], Scalar(255, 255, 255), 5);//FixMe: constants written in code
            cv::circle(newImage,imagePts[i-1],10,Scalar(128, 128, 255),2);
@@ -83,9 +74,13 @@ void CameraPose::refreshImage(){
         //Draw the last circle extra
         cv::circle(newImage,imagePts[elements-1],10,Scalar(128, 128, 255),2);
     }
-    if(elements>=4){
-        Mat img_draw_poses;
-        cv::drawFrameAxes(newImage, cam.getInMatrix(), cam.getInDistCoeffs(), cam.getTvec(), cam.getRvec(),6*defaultBoardSizeMM.width);  //Draws an Frame at the positio of rvec and Tvec
+    if(getSolutionValid()&&elements>=4){
+        //If we have a solution we draw a nice Frame axis and the corners of the sheet
+        cv::drawFrameAxes(newImage, cam.getInMatrix(), cam.getInDistCoeffs(), cam.getRvec(), cam.getTvec(),defaultBoardSizeMM.height/2);  //Draws an Frame at the positio of rvec and Tvec
+        for(std::size_t i = 1; i < 4; ++i) {
+            cv::line(newImage, imagePts[i-1], imagePts[i], Scalar(0, 255, 0), 2);
+        }
+        cv::line(newImage, imagePts[0], imagePts[3], Scalar(0, 255, 0), 2);
     }
 
 
@@ -111,6 +106,18 @@ camera *CameraPose::getCamera()
 }
 
 /**
+ * @brief CameraPose::getSolutionValid return wether the solution is already valid or not - atm. just checks number of points but can be improved later
+ * @return
+ */
+bool CameraPose::getSolutionValid() const
+{
+    if(obj.getNumberOfImgPoints()>=4){
+        return true;
+    }
+    return false;
+}
+
+/**
  * @brief CameraPose::setRefreshedImageCallback sets the function, that will be called if the image was updated
  * use with lambda as parameter: [&yourClass](cv::Mat& m) { return yourClass.Function(m); });
  * @param callback
@@ -123,5 +130,13 @@ void CameraPose::setRefreshedImageCallback(ImgCallbackFct callback)
 void CameraPose::setOriginalImage(const Mat &originalImage)
 {
     obj.addimage(originalImage);
+}
+
+Point3d CameraPose::getPositionOfObject() const
+{
+    Point3d t;
+    Mat camZero=cam.getPositionInCamCoordinates();
+    Mat cameraPositionRealWorld =cam.getRotM().t()*camZero-(cam.getRotM().t()*cam.getTvec());
+    return(Point3f(cameraPositionRealWorld));
 }
 

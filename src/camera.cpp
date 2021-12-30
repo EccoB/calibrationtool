@@ -11,6 +11,7 @@ camera::camera()
 {
     cameraMatrix = Mat::eye(3, 3, CV_64F);  //Identity Matrix 3x3 Mit 64_Bit Floating Point
     distCoeffs = Mat::zeros(8, 1, CV_64F);
+    positionCamCoordinates=Mat::zeros(3,1,CV_64F);   //Per default: the camera itself is at zero position in its coordinates
     rotM = Mat(3,1,cv::DataType<double>::type);//rodrigues rotation matrix
 
 }
@@ -35,6 +36,11 @@ void camera::setRotTransToWorldC(Mat &rvec, Mat &tvec)
     this->rvec=rvec.clone();
     this->tvec=tvec.clone();
     Rodrigues(rvec,rotM);   //Convert rotation Vector to Matrix
+}
+
+Mat camera::getPositionInCamCoordinates() const
+{
+    return positionCamCoordinates;
 }
 
 Point3d camera::translateToWorldCoordinate(cv::Point3d PointCamCoordinates)

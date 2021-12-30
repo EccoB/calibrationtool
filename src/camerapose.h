@@ -18,8 +18,10 @@ public:
     objPlanar* getCalibrationObject();
     camera* getCamera();
 
+    bool getSolutionValid() const;
     void setRefreshedImageCallback(ImgCallbackFct callback);
     void setOriginalImage(const cv::Mat& originalImage);
+    cv::Point3d getPositionOfObject() const;
 
 protected:
     objPlanar obj;
