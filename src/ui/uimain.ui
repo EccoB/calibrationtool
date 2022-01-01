@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>1306</width>
     <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>UImain</string>
+   <string>Calibration with a DinA4-sheet</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -25,7 +25,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>762</width>
+         <width>1268</width>
          <height>422</height>
         </rect>
        </property>
@@ -36,9 +36,16 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="pLoadImage">
         <property name="text">
          <string>Load Image</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pResetPoints">
+        <property name="text">
+         <string>Reset</string>
         </property>
        </widget>
       </item>
@@ -78,7 +85,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1306</width>
      <height>39</height>
     </rect>
    </property>

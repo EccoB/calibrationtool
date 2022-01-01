@@ -30,6 +30,8 @@ protected slots:
 private slots:
     void on_pushButton_clicked();
 
+    void on_pResetPoints_clicked();
+
 private:
     Ui::UImain *ui;
     imageView *imageUserL;

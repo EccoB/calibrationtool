@@ -7,6 +7,12 @@ using namespace cv;
 namespace acam {
 
 
+/**
+ * @brief calcRotTransOfCamera set the Rotation and Translation vectors of the camera when calibrated with a planar Object
+ * @param cam
+ * @param object
+ * @return
+ */
 bool calcRotTransOfCamera(camera &cam, objPlanar &object)
 {
     Mat rvec, tvec;  //Output rotation vector and Output translation vector
@@ -27,6 +33,10 @@ void setDefaultCameraParameters(camera &cam){
     cam.setIntrinsic(vals[2],vals[3],vals[0],vals[1]);
 }
 
+/**
+ * @brief printCameraParameters prints out camera-Matizes, useful for debugging
+ * @param cam
+ */
 void printCameraParameters(camera &cam)
 {
     std::cout<<"Camera Matrix:"<<std::endl;
@@ -40,6 +50,10 @@ void printCameraParameters(camera &cam)
     std::cout<<"------------------"<<std::endl;
 }
 
+/**
+ * @brief printCalibrationObject prints out information about an calibration object.
+ * @param object
+ */
 void printCalibrationObject(objPlanar &object)
 {
     std::cout<<"Calibration Object Points"<<std::endl;

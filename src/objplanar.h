@@ -5,7 +5,8 @@
 #include <vector>
 
 /**
- * @brief The objPlanar class holds parameters and information for an object used for calibration purposes
+ * @brief The objPlanar class holds parameters and information for an object used for calibration purposes.
+ * It holds 3D-World-Coordinates and the corresponding ImagePoints in Pixels for a given Image.
  */
 class objPlanar
 {
@@ -22,6 +23,7 @@ public:
     void addimage(cv::Mat img);
     void addimagePoint(cv::Point2f pxlXY);
     void addObjectPoint(cv::Point3f point, cv::Point2f correspondingPxl);
+    void resetPoints();
 
 
     //----

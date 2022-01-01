@@ -81,9 +81,13 @@ void UImain::updateImage(const QImage &img)
 
     //At the sime time, we upate the labels, should be done more elgant in a later program to avoid unnecessary rewrites
     if(solution.getSolutionValid()){
-        QString text=QString("x:%1 y:%2 z:%3").arg(solution.getPositionOfObject().x).arg(solution.getPositionOfObject().y).arg(solution.getPositionOfObject().z);
+        //We round the output as we nervertheless are not even accurate on a mm-base
+        QString text=QString("x: %1  y: %2  z: %3")
+                .arg(round(solution.getPositionOfCamera().x))
+                .arg(round(solution.getPositionOfCamera().y))
+                .arg(round(solution.getPositionOfCamera().z));
         ui->lPositionCam->setText(text);
-        ui->lPositionCam->setStyleSheet("QLabel { background-color : green; }");
+        ui->lPositionCam->setStyleSheet("QLabel { background-color : lightgreen; font-weight : 900;}");
     }
 }
 
@@ -181,5 +185,13 @@ void UImain::on_pushButton_clicked()
         if(filenames.length()==1)
             loadFile(filenames[0]);
     }
+}
+
+
+void UImain::on_pResetPoints_clicked()
+{
+    solution.reset();
+
+
 }
 
