@@ -34,9 +34,7 @@ void CameraPose::addPoint(int x, int y)
     // Calculation of cameraPosition, if there are enough points and we do it the first time
     if(obj.getNumberOfImgPoints()==4 && obj.getObjectPoints().size()==0){
         //First, we add the corresponding points
-        for(std::size_t i = 0; i < 4; ++i) {
-            obj.addObjectPoint(planar4ptsObject[i]);    //FixMe: This is only valid for the specific Planar DinA4 sheet
-        }
+        matchObjectPointsAndUserInput();
         acam::calcRotTransOfCamera(cam,obj);
         acam::printCameraParameters(cam);
         acam::printCalibrationObject(obj);
@@ -53,7 +51,7 @@ void CameraPose::addPoint(int x, int y)
  * @brief CameraPose::refreshImage creates the image from the the CalibrationObject and pushes updates to the defined callbackfunction
  */
 void CameraPose::refreshImage(){
-    Mat newImage=obj.getImage();
+    Mat newImage=obj.getImage().clone();    //This could be done more efficiently, but for not a lot of redrawings, this is ok
     const std::vector<cv::Point2f> imagePts=obj.getImagePoints();
     size_t elements=imagePts.size();
 
@@ -76,11 +74,11 @@ void CameraPose::refreshImage(){
     }
     if(getSolutionValid()&&elements>=4){
         //If we have a solution we draw a nice Frame axis and the corners of the sheet
-        cv::drawFrameAxes(newImage, cam.getInMatrix(), cam.getInDistCoeffs(), cam.getRvec(), cam.getTvec(),defaultBoardSizeMM.height/2);  //Draws an Frame at the positio of rvec and Tvec
         for(std::size_t i = 1; i < 4; ++i) {
-            cv::line(newImage, imagePts[i-1], imagePts[i], Scalar(0, 255, 0), 2);
+            cv::line(newImage, imagePts[i-1], imagePts[i], Scalar(128, 255, 0), 2);
         }
-        cv::line(newImage, imagePts[0], imagePts[3], Scalar(0, 255, 0), 2);
+        cv::line(newImage, imagePts[0], imagePts[3], Scalar(128, 255, 0), 2);
+        cv::drawFrameAxes(newImage, cam.getInMatrix(), cam.getInDistCoeffs(), cam.getRvec(), cam.getTvec(),defaultBoardSizeMM.height/2);  //Draws an Frame at the positio of rvec and Tvec
     }
 
 
@@ -132,11 +130,56 @@ void CameraPose::setOriginalImage(const Mat &originalImage)
     obj.addimage(originalImage);
 }
 
-Point3d CameraPose::getPositionOfObject() const
+/**
+ * @brief CameraPose::getPositionOfCamera returns the camera-position in relation to the first point of the calibration object
+ * @return
+ */
+Point3d CameraPose::getPositionOfCamera() const
 {
     Point3d t;
     Mat camZero=cam.getPositionInCamCoordinates();
     Mat cameraPositionRealWorld =cam.getRotM().t()*camZero-(cam.getRotM().t()*cam.getTvec());
     return(Point3f(cameraPositionRealWorld));
+}
+
+/**
+ * @brief CameraPose::reset deletes all UserInput
+ */
+void CameraPose::reset()
+{
+    obj.resetPoints();
+    refreshImage();
+
+}
+
+/**
+ * @brief CameraPose::matchObjectPointsAndUserInput matches the pixel-coordinates the user did put in with the given object points - specific for exercise
+ * @return
+ */
+bool CameraPose::matchObjectPointsAndUserInput(){
+    const std::vector<cv::Point2f> imagePts=obj.getImagePoints();
+    if(imagePts.size()!=4 || obj.getNumberOfPoints()!=0)  //works only for DinA4 sheet with four points
+        return false;
+    //The user can either put in the points clockwise, or counterclockwise, take a photo in landscape or non-landsape
+    bool landscape=true;
+    bool clockwise=true;
+
+    //Calculate the lenghts of all four lines
+    double g11 = cv::norm(imagePts[1]-imagePts[0]);
+    double g12 = cv::norm(imagePts[3]-imagePts[2]);
+
+    double g21 = cv::norm(imagePts[2]-imagePts[1]);
+    double g22 = cv::norm(imagePts[0]-imagePts[3]);
+
+    // a rough estimation for determining landscape/portrait
+    if(((g11+g12)/2)<((g21+g22)/2)){
+        landscape=false;
+    }
+
+    for(std::size_t i = 0; i < 4; ++i) {
+        obj.addObjectPoint(planar4ptsObject[landscape ? i: (i+1)%4]);    //FixMe: This is only valid for the specific Planar DinA4 sheet
+    }
+    return true;
+
 }
 
