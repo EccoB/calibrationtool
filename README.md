@@ -26,3 +26,9 @@ mkdir build
     make
 ```
 
+### Running
+Start the program, click the load image button, load the image with the DinA4-sheet.
+Click on the corners of the DinA4-sheet. If all four corners are marked, the coordinate zero point is displayed in the image and in the bottom right, the position of the camera is shown.
+
+You may click the Reset-Button to again position the corners.
+You may load the image directly by providing the path to the image directly as an argument at startup.
