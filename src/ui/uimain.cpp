@@ -177,7 +177,16 @@ bool UImain::loadFile(const QString &fileName){
     return true;
 }
 
-void UImain::on_pushButton_clicked()
+
+void UImain::on_pResetPoints_clicked()
+{
+    solution.reset();
+
+
+}
+
+
+void UImain::on_pLoadImage_clicked()
 {
     QFileDialog dialog(this,tr("Open Image"), "", tr("Image Files (*.png *.jpg *.jpeg *.JPG *.bmp)"));
     if(dialog.exec()){
@@ -185,13 +194,6 @@ void UImain::on_pushButton_clicked()
         if(filenames.length()==1)
             loadFile(filenames[0]);
     }
-}
-
-
-void UImain::on_pResetPoints_clicked()
-{
-    solution.reset();
-
 
 }
 

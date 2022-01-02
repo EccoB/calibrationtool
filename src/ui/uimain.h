@@ -28,9 +28,10 @@ protected:
 protected slots:
     void imageclicked(QMouseEvent *event);
 private slots:
-    void on_pushButton_clicked();
 
     void on_pResetPoints_clicked();
+
+    void on_pLoadImage_clicked();
 
 private:
     Ui::UImain *ui;

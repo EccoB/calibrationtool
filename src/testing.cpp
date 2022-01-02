@@ -5,6 +5,10 @@
 using namespace std;
 namespace tst {
 
+/**
+ * @brief checkIntrinsics does check if matrices put in are stored in the right way
+ * @return
+ */
 bool checkIntrinsics()
 {
     camera c;

@@ -1,6 +1,11 @@
 #ifndef CAMERAPOSE_H
 #define CAMERAPOSE_H
 
+/**
+ * It is intended that this class does not use any QT-dependencies, although displaying the image would be more convenient if used,
+ * I prefere to keep QT out of classes that might be reused without it.
+*/
+
 #include <objplanar.h>
 #include <camera.h>
 
